@@ -6,9 +6,9 @@ import java.rmi.registry.Registry;
 import api.Space;
 import api.DAC;
 import api.Task;
-import api.Shared;
 import system.WorkerImpl;
 import system.SpaceImpl;
+import tasks.SharedTsp;
 import tasks.TspReturn;
 import tasks.TspTask;
 import tasks.TspInputArg;
@@ -102,7 +102,7 @@ public class TspClient {
     		
     		double[][] distances = calcAllDistances(towns);
     		
-    		Shared shared = new Shared(new TspReturn(null,10000000));
+    		SharedTsp shared = new SharedTsp(new TspReturn(null,10000000));
     		
     		ArrayList<Integer> path = new ArrayList<Integer>();
     		//Start in town 0

@@ -1,16 +1,8 @@
 package api;
 
-public abstract class Shared implements SharedInterface{
-	private Object shared;
-	public Shared(Object input){
-		shared = input;
-	}
-	public Object getShared(){
-		return shared;
-	}
+public interface Shared {
+
+	public boolean isNewerThan(Object input);
 	
-	public void setShared(Object input){
-		shared = input;
-	}
-	
+	public Object get();
 }

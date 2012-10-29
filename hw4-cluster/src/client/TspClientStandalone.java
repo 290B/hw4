@@ -8,6 +8,7 @@ import api.DAC;
 import api.Task;
 import system.WorkerImpl;
 import system.SpaceImpl;
+import tasks.SharedTsp;
 import tasks.TspReturn;
 import tasks.TspTask;
 import tasks.TspInputArg;
@@ -16,7 +17,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;  
-import api.Shared;
 
 
 public class TspClientStandalone {
@@ -111,7 +111,7 @@ public class TspClientStandalone {
     		
     		double[][] distances = calcAllDistances(towns);
     		
-    		Shared shared = new Shared(new TspReturn(null,10000000));
+    		SharedTsp shared = new SharedTsp(new TspReturn(null,10000000));
     		
     		ArrayList<Integer> path = new ArrayList<Integer>();
     		//Start in town 0

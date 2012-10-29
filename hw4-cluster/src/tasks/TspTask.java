@@ -6,7 +6,6 @@ import java.io.Serializable;
 
 import api.DAC;
 import api.Task;
-import api.SharedInterface;
 import api.Shared;
 
 import tasks.TspReturn;
@@ -23,7 +22,7 @@ import tasks.TspReturn;
  * @author torgel
  *
  */
-public class TspTask implements Serializable, SharedInterface{
+public class TspTask implements Serializable, Shared{
 	private static final long serialVersionUID = 227L;		
 	public double currentShortestPathLength = 1000000;
 	public ArrayList<Integer> currentShortestPath = new ArrayList<Integer>();

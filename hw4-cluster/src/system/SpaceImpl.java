@@ -7,9 +7,10 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.Map;
 import java.util.concurrent.*;
 
+import tasks.SharedTsp;
+
 import api.Space;
 import api.Task;
-import api.Shared;
 
 public class SpaceImpl implements Space, Worker2Space, proxy{
 	
@@ -19,7 +20,7 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	private static final BlockingQueue proxyList = new LinkedBlockingQueue();
 	private static int nextID = 1;
 	private static final long serialVersionUID = 227L;
-	private static Shared shared;
+	private static SharedTsp shared;
 	
 	public static void main(String[] args) {
 		if (System.getSecurityManager() == null ) 
@@ -37,7 +38,7 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 		}
 	}
 	
-	public void put(Task task, Shared shared) throws RemoteException {
+	public void put(Task task, SharedTsp shared) throws RemoteException {
 		
 		//TODO create a shared variable here somwhere
 		//this.shared = shared;
