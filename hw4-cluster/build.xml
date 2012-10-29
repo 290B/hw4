@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 
-		
+			  <!-- git testibg --> 
+
 	
 <project name="homework1" default="dist" basedir=".">
 	
