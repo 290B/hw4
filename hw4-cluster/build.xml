@@ -14,7 +14,6 @@
 	<property name="projectpath" location="/cs/student/torgel/workspace/hw4-cluster/ "/>
 		
 	<property name="host" value="localhost"/>
-	<property name="workerPort" value="1096"/>
 
 	<property name="computer1" value="elroy.cs.ucsb.edu" />
 	<property name="computer2" value="kenny.cs.ucsb.edu" />
@@ -63,7 +62,6 @@
   	  <jvmarg value="-Djava.rmi.server.codebase=${web_codebase}"/>
   	  <jvmarg value="-Djava.security.policy=policy"/>
   	  <arg value="${host}"/>
-  	  <arg value="${workerPort}"/>
   	  <classpath>
   	    <pathelement location="dist/system.jar"/>
   	  </classpath>

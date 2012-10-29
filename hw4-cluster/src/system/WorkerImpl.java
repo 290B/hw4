@@ -11,7 +11,6 @@ import api.Task;
 public class WorkerImpl implements Worker {
 	public static void main(String[] args) {
 		String spaceHost = args[0];
-		int port = Integer.parseInt(args[1]);
 		String name = "Worker";
 		String spaceName = "Space";
 		if (System.getSecurityManager() == null ) 
@@ -21,10 +20,6 @@ public class WorkerImpl implements Worker {
 		try{
 			
 			Worker worker = new WorkerImpl();
-			Worker stub = (Worker) UnicastRemoteObject.exportObject(worker, 0);
-			Registry registry = LocateRegistry.createRegistry( port );
-			registry.rebind(name, stub);
-			
 			System.out.println("Connecting to space: " + spaceHost);
 			Registry registrySpace = LocateRegistry.getRegistry(spaceHost);
 			System.out.println("Looking up service: " + spaceName);
