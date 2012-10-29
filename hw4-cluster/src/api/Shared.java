@@ -4,5 +4,5 @@ public interface Shared {
 
 	public boolean isNewerThan(Object input);
 	
-	public Object get();
+	public Object getShared();
 }

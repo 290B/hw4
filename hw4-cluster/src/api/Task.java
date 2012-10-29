@@ -9,5 +9,5 @@ package api;
  * @param <T> a task with an execute method 
  */
 public interface Task<T> {
-	T execute();
+	T execute(Shared shared);
 }

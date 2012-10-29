@@ -1,9 +1,18 @@
 package tasks;
 
 import api.Shared;
-
+/**This class is used for sharing the best pathlength found between workers and space in the DAC system
+ * 
+ * @author torgel
+ *
+ */
 public class SharedTsp implements Shared{
 	private TspReturn shared;
+	
+	public void Shared(TspReturn in){
+		shared = in;
+	}
+	
 	public SharedTsp(TspReturn input){
 		shared = input;
 	}
@@ -23,11 +32,5 @@ public class SharedTsp implements Shared{
 			return false;
 		}
 	}
-	
-	public Object get() {
-		return shared;
-	}
-	
-	
 	
 }

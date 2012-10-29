@@ -9,6 +9,7 @@ import api.Task;
 import api.Shared;
 
 import tasks.TspReturn;
+import tasks.SharedTsp;
 
 /**
  * This class implements a Traveling Salesman Problem solver as a task
@@ -22,8 +23,11 @@ import tasks.TspReturn;
  * @author torgel
  *
  */
-public class TspTask implements Serializable, Shared{
+public class TspTask implements Serializable{
 	private static final long serialVersionUID = 227L;		
+	
+	public Shared shared;
+	
 	public double currentShortestPathLength = 1000000;
 	public ArrayList<Integer> currentShortestPath = new ArrayList<Integer>();
 
@@ -55,7 +59,8 @@ public class TspTask implements Serializable, Shared{
 		 * composer tasks via the space
 		 * 
 		 */
-		public Object execute() {
+		public Object execute(Shared shared) {
+						
 			//System.out.println("Tsp explore execute");
 			TspInputArg in = (TspInputArg)args[0];
 
@@ -140,7 +145,7 @@ public class TspTask implements Serializable, Shared{
 						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
 						TspExplorer localTask = new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
 						
-						localTask.execute();
+						localTask.execute(shared);
 						
 
 						//return new TspReturn(currentShortestPath, currentShortestPathLength);
@@ -181,7 +186,7 @@ public class TspTask implements Serializable, Shared{
 		 * @return returns null, but uses send_arguments to distribute TspResult objects
 		 * to the other composer tasks
 		 */
-		public Object execute(){
+		public Object execute(Shared shared){
 			//System.out.println("Tsp compose execute");
 			
 			TspReturn inputVal;
@@ -200,16 +205,6 @@ public class TspTask implements Serializable, Shared{
 			send_argument(ret);
 			return null;
 		}
-	}
-	
-	public boolean isNewerThan (Object input){
-		return false;
-		//TODO
-	}
-	
-	public Object get(){
-		//TODO
-		return null;
 	}
 }
 
