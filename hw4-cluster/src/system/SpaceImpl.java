@@ -9,6 +9,7 @@ import java.util.concurrent.*;
 
 import api.Space;
 import api.Task;
+import api.Shared;
 
 public class SpaceImpl implements Space, Worker2Space, proxy{
 	
@@ -18,7 +19,7 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	private static final BlockingQueue proxyList = new LinkedBlockingQueue();
 	private static int nextID = 1;
 	private static final long serialVersionUID = 227L;
-	
+	private static Shared shared;
 	
 	public static void main(String[] args) {
 		if (System.getSecurityManager() == null ) 
@@ -36,7 +37,11 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 		}
 	}
 	
-	public void put(Task task) throws RemoteException {
+	public void put(Task task, Shared shared) throws RemoteException {
+		
+		//TODO create a shared variable here somwhere
+		//this.shared = shared;
+		
 		//  Create a Closure object and insert to readyQ
 		System.out.println("Task recieved...");
 		Continuation finalResult = new Continuation(0,0);

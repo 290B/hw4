@@ -6,12 +6,11 @@ import java.rmi.registry.Registry;
 import api.Space;
 import api.DAC;
 import api.Task;
+import api.Shared;
 import system.WorkerImpl;
 import system.SpaceImpl;
-import tasks.FibTask;
 import tasks.TspReturn;
 import tasks.TspTask;
-import tasks.FibTask.Fib;
 import tasks.TspInputArg;
 
 import javax.swing.*;
@@ -103,6 +102,8 @@ public class TspClient {
     		
     		double[][] distances = calcAllDistances(towns);
     		
+    		Shared shared = new Shared(new TspReturn(null,10000000));
+    		
     		ArrayList<Integer> path = new ArrayList<Integer>();
     		//Start in town 0
     		path.add(0);
@@ -115,7 +116,7 @@ public class TspClient {
     		
     		TspTask.TspExplorer tsp = tspTask.new TspExplorer((Object)new TspInputArg(path, distances, 0, allTowns ,levelToSplitAt));
        		
-    		space.put(tsp);
+    		space.put(tsp,shared);
            	TspReturn results = (TspReturn)space.take();
            	ArrayList<Integer> ret = results.getPath();    
            	System.out.println("Length of the shortest path is: "+results.getSumPathLength());

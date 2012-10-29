@@ -6,10 +6,10 @@ import java.io.Serializable;
 
 import api.DAC;
 import api.Task;
+import api.SharedInterface;
+import api.Shared;
 
 import tasks.TspReturn;
-import tasks.FibTask.Fib;
-import tasks.FibTask.Sum;
 
 /**
  * This class implements a Traveling Salesman Problem solver as a task
@@ -23,7 +23,7 @@ import tasks.FibTask.Sum;
  * @author torgel
  *
  */
-public class TspTask implements Serializable{
+public class TspTask implements Serializable, SharedInterface{
 	private static final long serialVersionUID = 227L;		
 	public double currentShortestPathLength = 1000000;
 	public ArrayList<Integer> currentShortestPath = new ArrayList<Integer>();
@@ -201,6 +201,16 @@ public class TspTask implements Serializable{
 			send_argument(ret);
 			return null;
 		}
+	}
+	
+	public boolean isNewerThan (Object input){
+		return false;
+		//TODO
+	}
+	
+	public Object get(){
+		//TODO
+		return null;
 	}
 }
 

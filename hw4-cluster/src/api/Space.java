@@ -15,7 +15,7 @@ public interface Space extends Remote
 	 * @param task the task that will be distributed to the workers
 	 * @throws RemoteException
 	 */
-    void put( Task task ) throws RemoteException;
+    void put( Task task, Shared shared ) throws RemoteException;
 /**
  * 
  * @return a result object that has been compute by one of the workers
