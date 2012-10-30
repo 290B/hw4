@@ -27,7 +27,7 @@ public class TspTask implements Serializable{
 	private static final long serialVersionUID = 227L;		
 	
 	public SharedTsp sharedTsp;
-	public TspReturn currentBestValues;
+	public TspReturn currentBestValues = new TspReturn(new ArrayList<Integer>() , 100000);
 	public Shared sharedLocal;
 	
 	//public double currentShortestPathLength = 1000000;
@@ -62,20 +62,11 @@ public class TspTask implements Serializable{
 		 * 
 		 */
 		public Object execute() {
-			System.out.println("Tsp explore execute");
-			sharedTsp = (SharedTsp)getShared();
-			System.out.println("after getShared()");
-			
-			double lolda =  (Double) sharedTsp.getShared();
-			
-			System.out.println("lolda " + lolda );
-			
-			currentBestValues.settSumPathLength(lolda);
-			
-			
-			System.out.println("after some set stuff");
 
+			sharedTsp = (SharedTsp)getShared();
 			
+			currentBestValues.settSumPathLength((Double) sharedTsp.getShared());
+
 			TspInputArg in = (TspInputArg)args[0];
 
 				
@@ -89,45 +80,76 @@ public class TspTask implements Serializable{
 
 		    
 			//This is only true for the very first task.
-			if (path.size() == 1){
+			
+		    /*
+		    if (path.size() == 1){
 				setShared(findInitialShortPath());
 			}
-		
+		*/
 
 		    if (path.size() < levelToSplitAt){
-		    	//Explore more of the tree, that is add more elements to path and ant split the task up. 
-		    	//Also add the traversed Length so far
-		    		    	
-				int numComposeArguments = 0;
+		    	
+		    	
+		    	
+		    	if (path.size() == distances.length){
+		    		//if path is as long as it can be
+		    		
+		    	   	TspReturn lol = localTsp(in);
 
-				//for every child on path, that is every town except those visited on the path so far				
-				for (Integer town : allTowns){
-					if (!path.contains(town)){
-						ArrayList<Integer> newPath = new ArrayList<Integer>();
-						newPath.addAll(path);
-						newPath.add(town);	    	
+			    	//TODO remove some uselss code
+			    	double sumPathLengthX = lol.getSumPathLength();
+			    	ArrayList<Integer> pathX = new ArrayList<Integer>(lol.getPath());
+			    	
+			    	TspReturn res = new TspReturn(pathX,sumPathLengthX);
+					//System.out.println("before send arg");
 
-						double newSumPath = sumPathLength+(distances[path.get(path.size()-1)][newPath.get(newPath.size()-1)]);  //distance between the next town to visit and the previous one
-						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
-						
-						if (newSumPath < currentBestValues.getSumPathLength()){
-							currentBestValues.settSumPathLength(newSumPath);
-							currentBestValues.setPath(newPath);
+
+			    	
+			    	
+					if (res.getSumPathLength() < 10000){
+						send_argument(res);
+					}
+					//System.out.println("after send arg");
+		    		
+		    		
+		    	}
+		    	else {
+			    	//Explore more of the tree, that is add more elements to path and ant split the task up. 
+			    	//Also add the traversed Length so far
+			    		    	
+					int numComposeArguments = 0;
+
+					//for every child on path, that is every town except those visited on the path so far				
+					for (Integer town : allTowns){
+						if (!path.contains(town)){
+							ArrayList<Integer> newPath = new ArrayList<Integer>();
+							newPath.addAll(path);
+							newPath.add(town);	    	
+
+							double newSumPath = sumPathLength+(distances[path.get(path.size()-1)][newPath.get(newPath.size()-1)]);  //distance between the next town to visit and the previous one
+							//System.out.println("newPath" +newPath+" with length " + newSumPath);	
 							
-							spawn(new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt)));
-							numComposeArguments++;
+							if (newSumPath < currentBestValues.getSumPathLength()){
+								currentBestValues.settSumPathLength(newSumPath);
+								currentBestValues.setPath(newPath);
+								
+								spawn(new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt)));
+								numComposeArguments++;
+							}
 						}
 					}
-				}
-				if (numComposeArguments == 0){
+			    
+					if (numComposeArguments == 0){
 
-					send_argument(new TspReturn(null,100000));
+						send_argument(new TspReturn(null,100000));
+						
+					}else {
+						spawn_next(new TspComposer(), numComposeArguments); 
+					}
 					
-				}else {
-					spawn_next(new TspComposer(), numComposeArguments); 
-				}
-				
-				numComposeArguments=0;
+					numComposeArguments=0;
+		    	}
+		    	
 
 		    	
 		    }
@@ -163,8 +185,6 @@ public class TspTask implements Serializable{
 		    double sumPathLength = inn.getSumPathLength();
 		    ArrayList<Integer> allTowns = inn.getAllTowns();
 			
-			System.out.println("inside local");
-
 			if (path.size() < distances.length){
 				
 				//for every child on path, that is every town except those visited on the path so far				
@@ -194,18 +214,27 @@ public class TspTask implements Serializable{
 
 				
 				sumPathLength += (distances[path.get(path.size()-1)][0]); //adding the length back to town -
-				
+
+
 				//TODO
-				if (sumPathLength < currentBestValues.getSumPathLength()){
+				//if (sumPathLength < currentBestValues.getSumPathLength()){
+				
+				if (sumPathLength < (Double) sharedTsp.getShared()){
+				
+					System.out.println("sumpathlength " + sumPathLength);
+					System.out.println("current best cal " + (Double) sharedTsp.getShared());
+					
+					
+					System.out.println("yes");
 					currentBestValues.settSumPathLength(sumPathLength);
 					currentBestValues.setPath(path);
 					//TODO 
-					System.out.println("before set shared");
+				//	System.out.println("before set shared");
 
 					setShared(new SharedTsp(currentBestValues.getSumPathLength()));
 				}
 			}			
-			System.out.println("before return from local ");
+			//System.out.println("before return from local ");
 
 			return new TspReturn(currentBestValues.getPath(), currentBestValues.getSumPathLength());
 		}
@@ -219,9 +248,9 @@ public class TspTask implements Serializable{
 			double distanceToClosestTown = 100000;
 			Integer closestTown = 0;
 			double tempDistance;
-			System.out.println("into final short path");
+			//System.out.println("into final short path");
 			for(int i = 0 ; i < distances.length-1;i++){
-				System.out.println("city number: " + i);
+				//System.out.println("city number: " + i);
 				for (Integer town : allTowns){
 					if (!newPath.contains(town)){
 
@@ -238,10 +267,10 @@ public class TspTask implements Serializable{
 				totalDistance += distanceToClosestTown;
 				distanceToClosestTown = 100000;
 			}
-			System.out.println("after loop");
+			//System.out.println("after loop");
 			
 			totalDistance += distances[closestTown][newPath.get(0)];
-			System.out.println("beofre short init return");
+			//System.out.println("beofre short init return");
 			
 			return new SharedTsp(totalDistance);
 			

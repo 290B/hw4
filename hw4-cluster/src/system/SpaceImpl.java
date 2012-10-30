@@ -134,12 +134,15 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	public synchronized int getID() { return nextID++; }
 	
 	public synchronized boolean setShared(Shared proposedShared){
+		System.out.println("set shared called");
 		if (proposedShared.isNewerThan(shared)){
 			try {
 				this.shared = proposedShared.clone();
+				/*
 				SharedTsp tmp = (SharedTsp)shared;
 				TspReturn lol2 = (TspReturn)tmp.getShared();
 				System.out.println("Min path updated: " + lol2.getSumPathLength());
+				*/
 			} catch (CloneNotSupportedException e) {
 				System.out.println("Coult not clone...");
 			}

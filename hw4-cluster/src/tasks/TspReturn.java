@@ -33,9 +33,7 @@ public class TspReturn implements Serializable{
     }
     
     public void settSumPathLength(double inSum){
-		System.out.println("init settsumpathlanehgt");
     	this.sumPathLength = inSum;
-		System.out.println("after setssumt ");
     }
 
     
