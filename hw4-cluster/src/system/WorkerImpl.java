@@ -97,6 +97,7 @@ public class WorkerImpl implements Worker, Serializable {
 		public void run() {
 			try {
 				Shared proposedShared = (Shared)sharedQ.take();
+				System.out.println("received in worker impl");
 				if (proposedShared.isNewerThan(shared)){
 					Shared sharedFromSpace;
 					try {
