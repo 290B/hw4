@@ -41,7 +41,7 @@ public class WorkerImpl implements Worker {
 			DAC t = (DAC) task;
 			if (t.args == null) t.args = args;
 			try {
-				shared = space.getShared();
+				shared = (space.getShared()).clone();
 			} catch (RemoteException e) {
 				System.out.println("Space could not send Shared to worker");
 			}

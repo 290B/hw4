@@ -42,7 +42,7 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	public void put(Task task, Shared shared) throws RemoteException {
 		
 		//TODO create a shared variable here somewhere
-		this.shared = shared;
+		this.shared = shared.clone();
 		
 		//  Create a Closure object and insert to readyQ
 		System.out.println("Task recieved...");
