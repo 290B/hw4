@@ -27,6 +27,14 @@ public class TspReturn implements Serializable{
     public  ArrayList<Integer> getPath() { return path; }
     
     public double getSumPathLength(){ return sumPathLength;}
+    
+    public void setPath (ArrayList<Integer> inPath){
+    	this.path = inPath;
+    }
+    
+    public void settSumPathLength(double inSum){
+    	this.sumPathLength = inSum;
+    }
 
     
 

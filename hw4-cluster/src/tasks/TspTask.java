@@ -26,10 +26,12 @@ import tasks.SharedTsp;
 public class TspTask implements Serializable{
 	private static final long serialVersionUID = 227L;		
 	
-	public Shared shared;
+	public SharedTsp sharedTsp;
+	public TspReturn currentBestValues;
+	public Shared sharedLocal;
 	
-	public double currentShortestPathLength = 1000000;
-	public ArrayList<Integer> currentShortestPath = new ArrayList<Integer>();
+	//public double currentShortestPathLength = 1000000;
+	//public ArrayList<Integer> currentShortestPath = new ArrayList<Integer>();
 
 	
 	/**
@@ -59,8 +61,12 @@ public class TspTask implements Serializable{
 		 * composer tasks via the space
 		 * 
 		 */
-		public Object execute(Shared shared) {
-						
+		public Object execute(Shared sharedIn) {
+			sharedLocal = sharedIn;
+			sharedTsp = (SharedTsp)sharedLocal;
+			currentBestValues = (TspReturn)sharedTsp.getShared();
+			
+			
 			//System.out.println("Tsp explore execute");
 			TspInputArg in = (TspInputArg)args[0];
 
@@ -74,7 +80,7 @@ public class TspTask implements Serializable{
 		    	//Explore more of the tree, that is add more elements to path and ant split the task up. 
 		    	//Also add the traversed Length so far
 		    		    	
-				int i = 0;
+				int numComposeArguments = 0;
 
 				//for every child on path, that is every town except those visited on the path so far				
 				for (Integer town : allTowns){
@@ -85,12 +91,15 @@ public class TspTask implements Serializable{
 
 						double newSumPath = sumPathLength+(distances[path.get(path.size()-1)][newPath.get(newPath.size()-1)]);  //distance between the next town to visit and the previous one
 						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
-						spawn(new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt)));
-						i++;
+						
+						if (newSumPath < currentBestValues.getSumPathLength()){
+							spawn(new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt)));
+							numComposeArguments++;
+						}
 					}
 				}
-				spawn_next(new TspComposer(), i); //check the number of spawns, prob right
-				i=0;
+				spawn_next(new TspComposer(), numComposeArguments); 
+				numComposeArguments=0;
 
 		    	
 		    }
@@ -145,7 +154,7 @@ public class TspTask implements Serializable{
 						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
 						TspExplorer localTask = new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
 						
-						localTask.execute(shared);
+						localTask.execute(sharedLocal);
 						
 
 						//return new TspReturn(currentShortestPath, currentShortestPathLength);
@@ -155,12 +164,13 @@ public class TspTask implements Serializable{
 			else{
 				sumPathLength += (distances[path.get(path.size()-1)][0]); //adding the length back to town -
 				
-				if (sumPathLength < currentShortestPathLength){
-					currentShortestPathLength = sumPathLength;
-					currentShortestPath = path;
+				//TODO
+				if (sumPathLength < currentBestValues.getSumPathLength()){
+					currentBestValues.settSumPathLength(sumPathLength);
+					currentBestValues.setPath(path);
 				}
 			}			
-			return new TspReturn(currentShortestPath, currentShortestPathLength);
+			return new TspReturn(currentBestValues.getPath(), currentBestValues.getSumPathLength());
 		}
 	}
 
