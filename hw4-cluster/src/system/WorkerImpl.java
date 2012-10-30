@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import api.DAC;
 import api.Shared;
@@ -14,6 +16,7 @@ public class WorkerImpl implements Worker, Serializable {
     private Shared shared;
 	private static Worker2Space space;
 	private static final long serialVersionUID = 227L;
+	private static final BlockingQueue sharedQ = new LinkedBlockingQueue();
 	
 	public static void main(String[] args) {
 		String spaceHost = args[0];
@@ -25,6 +28,7 @@ public class WorkerImpl implements Worker, Serializable {
 		}
 		try{
 			Worker worker = new WorkerImpl();
+			
 			Worker stub = (Worker) UnicastRemoteObject.exportObject(worker, 0);
 			//Registry registry = LocateRegistry.createRegistry( 1093 );
 			//registry.rebind(name, stub);
@@ -38,6 +42,8 @@ public class WorkerImpl implements Worker, Serializable {
 			
 			space.register(worker);
 			System.out.println("WorkerImpl bound");
+			SharedProxy sharedProxy = ((WorkerImpl)worker).new SharedProxy();
+			sharedProxy.start();
 		} catch (Exception e) {
             System.err.println("WorkerImpl exception:");
             e.printStackTrace();
@@ -65,37 +71,59 @@ public class WorkerImpl implements Worker, Serializable {
 		
 	}
 	public Shared getShared(){
-		Shared shr;
 		try {
-			shr = shared.clone();
-			return shr;
+			return shared.clone(); 
 		} catch (CloneNotSupportedException e) {
+			
 			e.printStackTrace();
+			System.exit(0);
 		}
-		return null;
-		
+			return null;
 	}
 	
 	public void setShared(Shared proposedShared){
-		if (proposedShared.isNewerThan(shared)){
-			 try {
-				System.out.println("Sending shared to space!!!");
-				if (space.setShared(proposedShared)){
-					System.out.println("Shared was send to space!!!"); 
-					shared = proposedShared; 
-				 }else{
-					System.out.println("Shared was outdated");
-					 shared = space.getShared();
-				 }
-			} catch (RemoteException e) {
-				System.out.println("Could not send proposedShared to space");
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch(CloneNotSupportedException e){
-				System.out.println("Could not clone...");
-			}
-				 
+		try {
+			sharedQ.add(proposedShared.clone());
+		} catch (CloneNotSupportedException e) {
+			System.out.println("proposedShared not clonable");
+			e.printStackTrace();
+			System.exit(0);
 		}
+	}
+	
+	public class SharedProxy extends Thread{
+		public SharedProxy(){}
+		@Override
+		public void run() {
+			try {
+				Shared proposedShared = (Shared)sharedQ.take();
+				if (proposedShared.isNewerThan(shared)){
+					Shared sharedFromSpace;
+					try {
+						sharedFromSpace = space.getShared();
+						if (proposedShared.isNewerThan(sharedFromSpace)){
+							shared = proposedShared;
+							space.setShared(shared);
+						}else{
+							shared = sharedFromSpace;
+						}
+					} catch (RemoteException e) {
+						System.out.println("SharedProxy: Remote exception");
+						e.printStackTrace();
+					} catch (CloneNotSupportedException e) {
+						System.out.println("SharedProxy: Clone exception");
+						e.printStackTrace();
+					}
+					
+				}
+				
+			} catch (InterruptedException e) {
+				System.out.println("Error while executing sharedQ.take()");
+				e.printStackTrace();
+				System.exit(0);
+			}
+		}
+		
+		
 	}
 }
