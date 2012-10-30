@@ -42,7 +42,12 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	public void put(Task task, Shared shared) throws RemoteException {
 		
 		//TODO create a shared variable here somewhere
-		this.shared = shared.clone();
+		try {
+			this.shared = shared.clone();
+		} catch (CloneNotSupportedException e) {
+			System.out.println("SharedTSP not clonable");
+			e.printStackTrace();
+		}
 		
 		//  Create a Closure object and insert to readyQ
 		System.out.println("Task recieved...");

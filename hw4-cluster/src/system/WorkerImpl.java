@@ -44,6 +44,8 @@ public class WorkerImpl implements Worker {
 				shared = (space.getShared()).clone();
 			} catch (RemoteException e) {
 				System.out.println("Space could not send Shared to worker");
+			} catch(CloneNotSupportedException e){
+				System.out.println("Could not clone...");
 			}
 			task.execute(shared);
 			return new WorkerResult(t.spawn, t.spawn_next, t.spawn_nextJoin , t.send_argument);
