@@ -95,6 +95,7 @@ public class WorkerImpl implements Worker, Serializable {
 		public SharedProxy(){}
 		@Override
 		public void run() {
+			while(true){
 			try {
 				Shared proposedShared = (Shared)sharedQ.take();
 				System.out.println("received in worker impl");
@@ -123,6 +124,8 @@ public class WorkerImpl implements Worker, Serializable {
 				e.printStackTrace();
 				System.exit(0);
 			}
+		}
+		
 		}
 		
 		
