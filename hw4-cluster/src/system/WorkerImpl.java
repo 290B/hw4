@@ -1,5 +1,6 @@
 package system;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -9,9 +10,10 @@ import api.DAC;
 import api.Shared;
 import api.Task;
 
-public class WorkerImpl implements Worker {
+public class WorkerImpl implements Worker, Serializable {
     Shared shared;
 	static Worker2Space space;
+	private static final long serialVersionUID = 227L;
 	
 	public static void main(String[] args) {
 		String spaceHost = args[0];
