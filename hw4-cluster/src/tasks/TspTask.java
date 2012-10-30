@@ -69,12 +69,19 @@ public class TspTask implements Serializable{
 			
 			//System.out.println("Tsp explore execute");
 			TspInputArg in = (TspInputArg)args[0];
+			
+
 
 			path = in.getPath();
 		    distances = in.getDistances();
 		    sumPathLength = in.getSumPathLength() ;
 		    allTowns = in.getAllTowns();
 		    levelToSplitAt = in.getLevelToSplitAt() ;    
+		    
+			//This is only true for the very first task.
+			if (path.size() == 1){
+				setShared(findInitialShortPath());
+			}
 		    
 		    if (path.size() < levelToSplitAt){
 		    	//Explore more of the tree, that is add more elements to path and ant split the task up. 
@@ -93,6 +100,9 @@ public class TspTask implements Serializable{
 						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
 						
 						if (newSumPath < currentBestValues.getSumPathLength()){
+							currentBestValues.settSumPathLength(newSumPath);
+							currentBestValues.setPath(newPath);
+							
 							spawn(new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt)));
 							numComposeArguments++;
 						}
@@ -106,26 +116,16 @@ public class TspTask implements Serializable{
 		    else {
 		    	TspReturn lol = localTsp(in);
 		    	
-		    	
+		    	//TODO remove some uselss code
 		    	double sumPathLengthX = lol.getSumPathLength();
 		    	ArrayList<Integer> pathX = new ArrayList<Integer>(lol.getPath());
 		    	
 		    	TspReturn res = new TspReturn(pathX,sumPathLengthX);
 		    	
 				if (res.getSumPathLength() < 10000){
-
 					send_argument(res);
 				}
-		    	//A subtree is reached
-		    	//Explore the rest of the towns locally, that is those not in path
-		    	//Calculate the shortest path of those to visit
-		    	//remember to add distance back to town 0
 		    }
-		    
-
-			
-			
-
 			return null;
 		}
 		/**
@@ -152,12 +152,13 @@ public class TspTask implements Serializable{
 
 						double newSumPath = sumPathLength+(distances[path.get(path.size()-1)][newPath.get(newPath.size()-1)]);  //distance between the next town to visit and the previous one
 						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
-						TspExplorer localTask = new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
 						
-						localTask.execute(sharedLocal);
-						
-
-						//return new TspReturn(currentShortestPath, currentShortestPathLength);
+						if (newSumPath < currentBestValues.getSumPathLength()){
+							currentBestValues.settSumPathLength(newSumPath);
+							currentBestValues.setPath(newPath);			
+							TspExplorer localTask = new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
+							localTask.execute(sharedLocal);
+						}
 					}
 				}				
 			}
@@ -168,10 +169,48 @@ public class TspTask implements Serializable{
 				if (sumPathLength < currentBestValues.getSumPathLength()){
 					currentBestValues.settSumPathLength(sumPathLength);
 					currentBestValues.setPath(path);
+					//TODO 
+					setShared(new SharedTsp(new TspReturn(currentBestValues.getPath(), currentBestValues.getSumPathLength())));
 				}
 			}			
 			return new TspReturn(currentBestValues.getPath(), currentBestValues.getSumPathLength());
 		}
+		
+		public TspReturn findInitialShortPath (){
+			
+			ArrayList<Integer> newPath = new ArrayList<Integer>();
+			newPath.add(path.get(0));
+			double totalDistance = 0;
+			
+			double distanceToClosestTown = 100000;
+			Integer closestTown = 0;
+			double tempDistance;
+			
+			for(int i = 0 ; i < distances.length-1;i++){
+				for (Integer town : allTowns){
+					if (!newPath.contains(town)){
+
+						tempDistance = distances[town][newPath.get(newPath.size()-1)];  //distance between the next town to visit and the previous one
+						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
+						
+						if (tempDistance < distanceToClosestTown){
+							distanceToClosestTown = tempDistance;
+							closestTown = town;						
+						}
+					}
+				}
+				newPath.add(closestTown);
+				totalDistance += distanceToClosestTown;
+				distanceToClosestTown = 100000;
+			}
+			
+			totalDistance += distances[closestTown][newPath.get(0)];
+			
+			return new TspReturn(newPath , totalDistance);
+			
+		}
+		
+		
 	}
 
 	
@@ -216,6 +255,8 @@ public class TspTask implements Serializable{
 			return null;
 		}
 	}
+	
+	
 }
 
 /*
