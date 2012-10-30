@@ -54,4 +54,23 @@ public class WorkerImpl implements Worker {
 		
 	}
 	public Shared getShared(){return shared;}
+	
+	public void setShared(Shared proposedShared){
+		if (proposedShared.isNewerThan(shared)){
+			
+			 try {
+				if (space.setShared(proposedShared)){
+					 shared = proposedShared; 
+				 }else{
+					 shared = space.getShared();
+				 }
+			} catch (RemoteException e) {
+				System.out.println("Could not send proposedShared to space");
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+				 
+		}
+	}
 }

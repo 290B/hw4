@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import system.WorkerImpl;
+
 /**
  * The interface to the Divide and conquer framework which is used
  * to compute distributed recursive tasks
@@ -16,6 +18,8 @@ public class DAC {
 	public Task spawn_next;
 	public int spawn_nextJoin;
 	public LinkedList spawn = new LinkedList();
+	
+	private WorkerImpl worker;
 	
 	public Object send_argument;
 	
@@ -51,6 +55,11 @@ public class DAC {
 	protected void send_argument(Object value){
 		send_argument = value;
 	}
+	public Shared getShared(){ return worker.getShared();}
+	
+	public void setShared(Shared proposedShared){ worker.setShared(proposedShared); }
+	
+	
 	//public void execute(){}
 	
 //	public WorkerResult start(){
