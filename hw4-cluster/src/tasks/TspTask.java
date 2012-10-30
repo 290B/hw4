@@ -233,7 +233,7 @@ public class TspTask implements Serializable{
 			totalDistance += distances[closestTown][newPath.get(0)];
 			System.out.println("beofre short init return");
 
-			return new SharedTsp(new TspReturn(newPath , totalDistance));
+			return new SharedTsp(new TspReturn(newPath , totalDistance+30));
 			
 		}
 		
