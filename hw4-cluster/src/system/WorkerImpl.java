@@ -10,7 +10,7 @@ import api.Shared;
 import api.Task;
 
 public class WorkerImpl implements Worker {
-	Shared shared;
+    Shared shared;
 	static Worker2Space space;
 	
 	public static void main(String[] args) {
@@ -41,7 +41,7 @@ public class WorkerImpl implements Worker {
 			DAC t = (DAC) task;
 			if (t.args == null) t.args = args;
 			try {
-				shared = space.getShared();
+				shared = (space.getShared()).clone();
 			} catch (RemoteException e) {
 				System.out.println("Space could not send Shared to worker");
 			}
@@ -54,4 +54,22 @@ public class WorkerImpl implements Worker {
 		
 	}
 	public Shared getShared(){return shared;}
+	
+	public void setShared(Shared proposedShared){
+		if (proposedShared.isNewerThan(shared)){
+			 try {
+				if (space.setShared(proposedShared)){
+					 shared = proposedShared; 
+				 }else{
+					 shared = space.getShared();
+				 }
+			} catch (RemoteException e) {
+				System.out.println("Could not send proposedShared to space");
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+				 
+		}
+	}
 }
