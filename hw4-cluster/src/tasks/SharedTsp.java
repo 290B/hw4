@@ -11,9 +11,9 @@ import api.Shared;
 public class SharedTsp implements Shared, Serializable{
     static final long serialVersionUID = 227L; // Was missing 
 
-	private TspReturn tspShared;
+	private double tspShared;
 
-	public SharedTsp(TspReturn input){
+	public SharedTsp(double input){
 		tspShared = input;
 	}
 	
@@ -22,13 +22,11 @@ public class SharedTsp implements Shared, Serializable{
 	}
 	
 	public Object getShared(){
-		return tspShared;
+		return (double)tspShared;
 	}
 
 	public boolean isNewerThan(Shared input) {
-		SharedTsp inputSharedTsp = (SharedTsp)input;
-		TspReturn in = (TspReturn)inputSharedTsp.getShared();
-		if (in.getSumPathLength() <= this.tspShared.getSumPathLength()){
+		if ( (Double) input.getShared() <= this.tspShared){
 			return false;
 		}else{
 			return true;

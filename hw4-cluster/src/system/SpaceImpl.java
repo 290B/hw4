@@ -53,10 +53,6 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 		}
 		System.out.println("Getting Shared from space...2");
 		
-		SharedTsp lol = (SharedTsp)shared;
-		TspReturn lol2 = (TspReturn)lol.getShared();
-		System.out.println("tspreturn stuff" + lol2.getSumPathLength() + "asdasd" + lol2.getPath() );
-		
 		
 		//  Create a Closure object and insert to readyQ
 		System.out.println("Task recieved...");

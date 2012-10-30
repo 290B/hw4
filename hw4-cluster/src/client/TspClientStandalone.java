@@ -111,7 +111,7 @@ public class TspClientStandalone {
     		
     		double[][] distances = calcAllDistances(towns);
     		
-    		SharedTsp shared = new SharedTsp(new TspReturn(null,10000000));
+    		SharedTsp shared = new SharedTsp(10000000);
     		
     		ArrayList<Integer> path = new ArrayList<Integer>();
     		//Start in town 0

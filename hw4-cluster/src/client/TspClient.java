@@ -112,17 +112,27 @@ public class TspClient {
     		//Start in town 0
     		path.add(0);
     		
-    		SharedTsp shared = new SharedTsp(new TspReturn(path,10000));
+    		
+            System.out.println("before new shared");
+
+    		
+    		SharedTsp shared = new SharedTsp(100000);
     		
     		//generate list of all town indexes
     		ArrayList<Integer> allTowns = new ArrayList<Integer>();
     		for (int i = 0; i < distances.length;i++){
     			allTowns.add(i);
     		}
+
+    		
+            System.out.println("before new task");
+
     		
     		TspTask.TspExplorer tsp = tspTask.new TspExplorer((Object)new TspInputArg(path, distances, 0, allTowns ,levelToSplitAt));
-       		
+            System.out.println("before put");
+
     		space.put(tsp,shared);
+    		
            	TspReturn results = (TspReturn)space.take();
            	ArrayList<Integer> ret = results.getPath();    
            	System.out.println("Length of the shortest path is: "+results.getSumPathLength());

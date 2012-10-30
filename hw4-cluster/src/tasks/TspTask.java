@@ -62,14 +62,22 @@ public class TspTask implements Serializable{
 		 * 
 		 */
 		public Object execute() {
+			System.out.println("Tsp explore execute");
 			sharedTsp = (SharedTsp)getShared();
+			System.out.println("after getShared()");
 			
-			currentBestValues = (TspReturn)(sharedTsp.getShared());
+			double lolda =  (Double) sharedTsp.getShared();
+			
+			System.out.println("lolda " + lolda );
+			
+			currentBestValues.settSumPathLength(lolda);
 			
 			
-			//System.out.println("Tsp explore execute");
+			System.out.println("after some set stuff");
+
+			
 			TspInputArg in = (TspInputArg)args[0];
-			
+
 				
 
 			path = in.getPath();
@@ -77,6 +85,8 @@ public class TspTask implements Serializable{
 		    sumPathLength = in.getSumPathLength() ;
 		    allTowns = in.getAllTowns();
 		    levelToSplitAt = in.getLevelToSplitAt() ;    
+		    
+
 		    
 			//This is only true for the very first task.
 			if (path.size() == 1){
@@ -192,7 +202,7 @@ public class TspTask implements Serializable{
 					//TODO 
 					System.out.println("before set shared");
 
-					setShared(new SharedTsp(new TspReturn(currentBestValues.getPath(), currentBestValues.getSumPathLength())));
+					setShared(new SharedTsp(currentBestValues.getSumPathLength()));
 				}
 			}			
 			System.out.println("before return from local ");
@@ -232,8 +242,8 @@ public class TspTask implements Serializable{
 			
 			totalDistance += distances[closestTown][newPath.get(0)];
 			System.out.println("beofre short init return");
-
-			return new SharedTsp(new TspReturn(newPath , totalDistance+30));
+			
+			return new SharedTsp(totalDistance);
 			
 		}
 		
