@@ -231,7 +231,7 @@ public class TspTask implements Serializable{
 					//TODO 
 				//	System.out.println("before set shared");
 
-					setShared(new SharedTsp(currentBestValues.getSumPathLength()));
+					setShared(new SharedTsp(sumPathLength));
 				}
 			}			
 			//System.out.println("before return from local ");
