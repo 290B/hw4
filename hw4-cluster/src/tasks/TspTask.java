@@ -74,11 +74,11 @@ public class TspTask implements Serializable{
 		    allTowns = in.getAllTowns();
 		    levelToSplitAt = in.getLevelToSplitAt() ;    
 		  		
-		    /*
+		    
 		    if (path.size() == 1){
 				setShared(findInitialShortPath());
 			}
-		   */
+		   
 		    if (path.size() < levelToSplitAt){ //The tree is still too big to be computed localy, try to split
 		    	
 		    	if (path.size() == distances.length){  //path at maximum length, compute that single path locally
@@ -102,7 +102,10 @@ public class TspTask implements Serializable{
 							double newSumPath = sumPathLength+(distances[path.get(path.size()-1)][newPath.get(newPath.size()-1)]);  //distance between the next town to visit and the previous one
 							//System.out.println("newPath" +newPath+" with length " + newSumPath);	
 							
-							if (newSumPath < currentBestValues.getSumPathLength()){
+							//if (newSumPath < currentBestValues.getSumPathLength()){
+							
+							if (newSumPath < (Double) sharedTsp.getShared()){
+							
 								currentBestValues.settSumPathLength(newSumPath);
 								currentBestValues.setPath(newPath);
 								
@@ -156,7 +159,8 @@ public class TspTask implements Serializable{
 						double newSumPath = sumPathLength+(distances[path.get(path.size()-1)][newPath.get(newPath.size()-1)]);  //distance between the next town to visit and the previous one
 						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
 						
-						if (newSumPath < currentBestValues.getSumPathLength()){
+						//if (newSumPath < currentBestValues.getSumPathLength()){ //TODO is this right+???
+						if (newSumPath < (Double) sharedTsp.getShared()){							
 							currentBestValues.settSumPathLength(newSumPath);
 							currentBestValues.setPath(newPath);			
 							TspExplorer localTask = new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
