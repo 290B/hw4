@@ -10,7 +10,7 @@ import api.Shared;
 import api.Task;
 
 public class WorkerImpl implements Worker {
-	Shared shared;
+    Shared shared;
 	static Worker2Space space;
 	
 	public static void main(String[] args) {
@@ -57,7 +57,6 @@ public class WorkerImpl implements Worker {
 	
 	public void setShared(Shared proposedShared){
 		if (proposedShared.isNewerThan(shared)){
-			
 			 try {
 				if (space.setShared(proposedShared)){
 					 shared = proposedShared; 
