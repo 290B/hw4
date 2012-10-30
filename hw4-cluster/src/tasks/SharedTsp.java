@@ -6,19 +6,19 @@ import api.Shared;
  * @author torgel
  *
  */
-public class SharedTsp implements Shared, Cloneable{
+public class SharedTsp implements Shared{
 	private TspReturn shared;
 
 	public SharedTsp(TspReturn input){
 		shared = input;
 	}
 	
-	public Object getShared(){
-		return shared;
+	public SharedTsp(){
+		
 	}
 	
-	public void setShared(TspReturn input){
-		shared = input;
+	public Object getShared(){
+		return shared;
 	}
 
 	public boolean isNewerThan(Object input) {
@@ -30,8 +30,8 @@ public class SharedTsp implements Shared, Cloneable{
 		}
 	}
 	
-	protected Object clone() throws CloneNotSupportedException{
-		return super.clone();
+	public Shared clone() throws CloneNotSupportedException{
+		return (Shared) super.clone();
 	}
 	
 }

@@ -62,7 +62,9 @@ public class TspTask implements Serializable{
 		 * 
 		 */
 		public Object execute(Shared sharedIn) {
-			sharedLocal = sharedIn;
+			sharedLocal = getShared();
+			
+			
 			sharedTsp = (SharedTsp)sharedLocal;
 			currentBestValues = (TspReturn)sharedTsp.getShared();
 			
@@ -80,8 +82,10 @@ public class TspTask implements Serializable{
 		    
 			//This is only true for the very first task.
 			if (path.size() == 1){
+				
 				setShared(findInitialShortPath());
 			}
+			
 		    
 		    if (path.size() < levelToSplitAt){
 		    	//Explore more of the tree, that is add more elements to path and ant split the task up. 
@@ -176,7 +180,7 @@ public class TspTask implements Serializable{
 			return new TspReturn(currentBestValues.getPath(), currentBestValues.getSumPathLength());
 		}
 		
-		public TspReturn findInitialShortPath (){
+		public Shared findInitialShortPath (){
 			
 			ArrayList<Integer> newPath = new ArrayList<Integer>();
 			newPath.add(path.get(0));
@@ -206,7 +210,7 @@ public class TspTask implements Serializable{
 			
 			totalDistance += distances[closestTown][newPath.get(0)];
 			
-			return new TspReturn(newPath , totalDistance);
+			return new SharedTsp(new TspReturn(newPath , totalDistance));
 			
 		}
 		
