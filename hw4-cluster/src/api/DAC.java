@@ -55,9 +55,11 @@ public class DAC {
 	protected void send_argument(Object value){
 		send_argument = value;
 	}
-	public Shared getShared(){ return worker.getShared();}
+	protected Shared getShared(){ return worker.getShared();}
 	
-	public void setShared(Shared proposedShared){ worker.setShared(proposedShared); }
+	protected void setShared(Shared proposedShared){ worker.setShared(proposedShared); }
+	
+	public void setWorker(WorkerImpl worker){ this.worker = worker; }
 	
 	
 	//public void execute(){}

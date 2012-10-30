@@ -8,10 +8,13 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 import tasks.SharedTsp;
+import tasks.TspReturn;
 
 import api.Shared;
 import api.Space;
 import api.Task;
+
+import tasks.SharedTsp;
 
 public class SpaceImpl implements Space, Worker2Space, proxy{
 	
@@ -39,15 +42,21 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 		}
 	}
 	
-	public void put(Task task, Shared shared) throws RemoteException {
+	public void put(Task task, Shared sharedIn) throws RemoteException {
 		
 		//TODO create a shared variable here somewhere
 		try {
-			this.shared = shared.clone();
+			this.shared = sharedIn.clone();
 		} catch (CloneNotSupportedException e) {
 			System.out.println("SharedTSP not clonable");
 			e.printStackTrace();
 		}
+		System.out.println("Getting Shared from space...2");
+		
+		SharedTsp lol = (SharedTsp)shared;
+		TspReturn lol2 = (TspReturn)lol.getShared();
+		System.out.println("tspreturn stuff" + lol2.getSumPathLength() + "asdasd" + lol2.getPath() );
+		
 		
 		//  Create a Closure object and insert to readyQ
 		System.out.println("Task recieved...");
@@ -130,15 +139,23 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	
 	public synchronized boolean setShared(Shared proposedShared){
 		if (proposedShared.isNewerThan(shared)){
-			this.shared = proposedShared;
+			try {
+				this.shared = proposedShared.clone();
+			} catch (CloneNotSupportedException e) {
+				System.out.println("Coult not clone...");
+			}
 			return true;
 		}	
 		return false;
 		
 	}
-	public Shared getShared(){
-		return this.shared;
+
+	@Override
+	public Shared getShared() throws RemoteException, CloneNotSupportedException {
+		System.out.println("About to return a Shared object");
+		return shared.clone();
 	}
+	
 	
 
 }

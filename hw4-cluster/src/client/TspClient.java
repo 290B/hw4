@@ -26,7 +26,7 @@ public class TspClient {
 
 	private static final int N_PIXELS = 512;
 	
-	private static final int whichLevelToSplitAt = 3;
+	private static final int whichLevelToSplitAt = 6;
 	
 	private static double[][] towns =
 		{
@@ -102,11 +102,13 @@ public class TspClient {
     		
     		double[][] distances = calcAllDistances(towns);
     		
-    		SharedTsp shared = new SharedTsp(new TspReturn(null,10000000));
+
     		
     		ArrayList<Integer> path = new ArrayList<Integer>();
     		//Start in town 0
     		path.add(0);
+    		
+    		SharedTsp shared = new SharedTsp(new TspReturn(path,10000));
     		
     		//generate list of all town indexes
     		ArrayList<Integer> allTowns = new ArrayList<Integer>();

@@ -12,7 +12,9 @@
 	<property name="src" location="src"/>
 	<property name="build" location="build"/>
 	<property name="dist"  location="dist"/>
-	<property name="projectpath" location="/cs/student/torgel/workspace/hw4-cluster/ "/>
+	<property name="projectpath" location="/cs/student/torgel/git/hw4-cluster/hw4-cluster/ "/>
+	
+
 		
 	<property name="host" value="localhost"/>
 
@@ -95,6 +97,7 @@
   	  <jvmarg value="-Djava.security.policy=policy"/>
   	  <classpath>
   	    <pathelement location="dist/system.jar"/>
+  	  <pathelement location="dist/client.jar"/>
   	  </classpath>
   	</java>
   </target>  
@@ -130,6 +133,7 @@
   	  <arg value="${host}"/>
   	  <classpath>
   	    <pathelement location="dist/client.jar"/>
+  	  <pathelement location="dist/system.jar"/>
   	  </classpath>
   	</java>
   </target>

@@ -21,6 +21,8 @@ public class WorkerProxyImpl extends Thread {
 			try {
 				closure = spaceImpl.takeQ();
 				try {
+					System.out.println("proxy started");	
+
 					WorkerResult  wr = worker.execute(closure.t, closure.args);
 					if (wr.spawn_next != null){
 						int spawnNextID = spaceImpl.getID();

@@ -11,8 +11,8 @@ import api.Shared;
 import api.Task;
 
 public class WorkerImpl implements Worker, Serializable {
-    Shared shared;
-	static Worker2Space space;
+    private Shared shared;
+	private static Worker2Space space;
 	private static final long serialVersionUID = 227L;
 	
 	public static void main(String[] args) {
@@ -24,8 +24,13 @@ public class WorkerImpl implements Worker, Serializable {
 		   System.setSecurityManager(new java.rmi.RMISecurityManager()); 
 		}
 		try{
-			
 			Worker worker = new WorkerImpl();
+			Worker stub = (Worker) UnicastRemoteObject.exportObject(worker, 0);
+			//Registry registry = LocateRegistry.createRegistry( 1093 );
+			//registry.rebind(name, stub);
+			
+			
+			//Worker worker = new WorkerImpl();
 			System.out.println("Connecting to space: " + spaceHost);
 			Registry registrySpace = LocateRegistry.getRegistry(spaceHost);
 			System.out.println("Looking up service: " + spaceName);
@@ -42,14 +47,19 @@ public class WorkerImpl implements Worker, Serializable {
 	public WorkerResult execute(Task task, Object [] args){
 			DAC t = (DAC) task;
 			if (t.args == null) t.args = args;
+			t.setWorker(this);
 			try {
-				shared = (space.getShared()).clone();
+				System.out.println("Getting Shared from space...");	
+				Shared sharedTemp = space.getShared(); 
+				System.out.println("Almost");
+				shared = sharedTemp.clone();
+				System.out.println("Done");
 			} catch (RemoteException e) {
 				System.out.println("Space could not send Shared to worker");
 			} catch(CloneNotSupportedException e){
 				System.out.println("Could not clone...");
 			}
-			task.execute(shared);
+			task.execute();
 			return new WorkerResult(t.spawn, t.spawn_next, t.spawn_nextJoin , t.send_argument);
 	}
 	public void exit() throws RemoteException {
@@ -57,14 +67,27 @@ public class WorkerImpl implements Worker, Serializable {
 		System.exit(0);
 		
 	}
-	public Shared getShared(){return shared;}
+	public Shared getShared(){
+		Shared shr;
+		try {
+			shr = shared.clone();
+			return shr;
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
 	
 	public void setShared(Shared proposedShared){
 		if (proposedShared.isNewerThan(shared)){
 			 try {
+				System.out.println("Sending shared to space!!!");
 				if (space.setShared(proposedShared)){
-					 shared = proposedShared; 
+					System.out.println("Shared was send to space!!!"); 
+					shared = proposedShared; 
 				 }else{
+					System.out.println("Shared was outdated");
 					 shared = space.getShared();
 				 }
 			} catch (RemoteException e) {
@@ -72,6 +95,8 @@ public class WorkerImpl implements Worker, Serializable {
 				e.printStackTrace();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
+			} catch(CloneNotSupportedException e){
+				System.out.println("Could not clone...");
 			}
 				 
 		}

@@ -2,7 +2,7 @@ package api;
 
 public interface Shared extends Cloneable{
 
-	public boolean isNewerThan(Object input);
+	public boolean isNewerThan(Shared input);
 	
 	public Object getShared();
 	
