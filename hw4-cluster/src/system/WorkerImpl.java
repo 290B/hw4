@@ -49,11 +49,8 @@ public class WorkerImpl implements Worker, Serializable {
 			if (t.args == null) t.args = args;
 			t.setWorker(this);
 			try {
-				System.out.println("Getting Shared from space...");	
 				Shared sharedTemp = space.getShared(); 
-				System.out.println("Almost");
 				shared = sharedTemp.clone();
-				System.out.println("Done");
 			} catch (RemoteException e) {
 				System.out.println("Space could not send Shared to worker");
 			} catch(CloneNotSupportedException e){

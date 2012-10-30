@@ -141,6 +141,9 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 		if (proposedShared.isNewerThan(shared)){
 			try {
 				this.shared = proposedShared.clone();
+				SharedTsp tmp = (SharedTsp)shared;
+				TspReturn lol2 = (TspReturn)tmp.getShared();
+				System.out.println("Min path updated: " + lol2.getSumPathLength());
 			} catch (CloneNotSupportedException e) {
 				System.out.println("Coult not clone...");
 			}
@@ -152,7 +155,6 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 
 	@Override
 	public Shared getShared() throws RemoteException, CloneNotSupportedException {
-		System.out.println("About to return a Shared object");
 		return shared.clone();
 	}
 	

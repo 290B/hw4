@@ -64,8 +64,6 @@ public class TspTask implements Serializable{
 		public Object execute() {
 			sharedTsp = (SharedTsp)getShared();
 			
-			System.out.println("executing tsp explorer task");
-			
 			currentBestValues = (TspReturn)(sharedTsp.getShared());
 			
 			
