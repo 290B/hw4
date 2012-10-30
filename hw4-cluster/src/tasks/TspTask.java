@@ -73,11 +73,12 @@ public class TspTask implements Serializable{
 		    sumPathLength = in.getSumPathLength() ;
 		    allTowns = in.getAllTowns();
 		    levelToSplitAt = in.getLevelToSplitAt() ;    
-		  		    
+		  		
+		    /*
 		    if (path.size() == 1){
 				setShared(findInitialShortPath());
 			}
-		   
+		   */
 		    if (path.size() < levelToSplitAt){ //The tree is still too big to be computed localy, try to split
 		    	
 		    	if (path.size() == distances.length){  //path at maximum length, compute that single path locally
@@ -173,8 +174,8 @@ public class TspTask implements Serializable{
 				
 				if (sumPathLength < (Double) sharedTsp.getShared()){
 				
-					//System.out.println("sumpathlength " + sumPathLength);
-					//System.out.println("current best cal " + (Double) sharedTsp.getShared());
+					System.out.println("sumpathlength " + sumPathLength);
+					System.out.println("current best cal " + (Double) sharedTsp.getShared());
 				
 					currentBestValues.settSumPathLength(sumPathLength);
 					currentBestValues.setPath(path);
