@@ -9,6 +9,7 @@ import java.util.concurrent.*;
 
 import tasks.SharedTsp;
 
+import api.Shared;
 import api.Space;
 import api.Task;
 
@@ -20,7 +21,7 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	private static final BlockingQueue proxyList = new LinkedBlockingQueue();
 	private static int nextID = 1;
 	private static final long serialVersionUID = 227L;
-	private static SharedTsp shared;
+	private static Shared shared;
 	
 	public static void main(String[] args) {
 		if (System.getSecurityManager() == null ) 
@@ -122,6 +123,17 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	
 	public synchronized int getID() { return nextID++; }
 	
+	public synchronized boolean setShared(Shared proposedShared){
+		if (proposedShared.isNewerThan(shared)){
+			this.shared = proposedShared;
+			return true;
+		}	
+		return false;
+		
+	}
+	public Shared getShared(){
+		return this.shared;
+	}
 	
 
 }
