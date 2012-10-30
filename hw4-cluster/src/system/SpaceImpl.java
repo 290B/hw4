@@ -19,7 +19,7 @@ import tasks.SharedTsp;
 public class SpaceImpl implements Space, Worker2Space, proxy{
 	
 	private static final Map waitMap = new ConcurrentHashMap();
-	private static final BlockingQueue readyQ = new LinkedBlockingQueue();
+	private static final BlockingDeque readyQ = new LinkedBlockingDeque();
 	private static final BlockingQueue result = new LinkedBlockingQueue();
 	private static final BlockingQueue proxyList = new LinkedBlockingQueue();
 	private static int nextID = 1;
@@ -88,7 +88,7 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 	
 	public void putQ(Closure closure) {
 		//System.out.println("Putting closure to queue...");
-		readyQ.add(closure);
+		readyQ.addFirst(closure);
 	}
 	
 	synchronized public void placeArgument(Continuation cont, Object argument){
@@ -106,7 +106,7 @@ public class SpaceImpl implements Space, Worker2Space, proxy{
 			temp[cont.argNumber] = argument;
 			closure.joinCounter--;
 			if (closure.joinCounter == 0){
-				readyQ.add(closure);
+				putQ(closure);
 			}else{
 			putWaitMap(closure);
 			}
