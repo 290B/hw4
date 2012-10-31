@@ -26,7 +26,7 @@ public class TspClient {
 
 	private static final int N_PIXELS = 512;
 	
-	private static final int whichLevelToSplitAt = 20;
+	private static final int whichLevelToSplitAt = 3;
 	
 	private static double[][] towns =
 		{
@@ -39,13 +39,13 @@ public class TspClient {
 		{ 7, 7 },
 		{ 2, 7 },
 		{ 3, 3 },
-		//{ 6, 3 },
-		//{ 6, 6 },
-		//{ 3, 6 },
-		//{ 4, 4 },
-		//{ 5, 4 },
-		//{ 5, 5 },
-		//{ 4, 5 }
+		{ 6, 3 },
+		{ 6, 6 },
+		{ 3, 6 },
+		{ 4, 4 },
+		{ 5, 4 },
+		{ 5, 5 },
+		{ 4, 5 }
 		};
 	
     public static void main(String args[]) {

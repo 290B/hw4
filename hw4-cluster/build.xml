@@ -12,18 +12,19 @@
 	<property name="src" location="src"/>
 	<property name="build" location="build"/>
 	<property name="dist"  location="dist"/>
-	<property name="projectpath" location="/cs/student/torgel/git/hw4-cluster/hw4-cluster/ "/>
+	<property name="projectpath" location="/cs/student/orein/git/hw4/hw4-cluster "/>
 	
 
 		
-	<property name="host" value="localhost"/>
+	<property name="host" value="snoopy"/>
 
 	<property name="computer1" value="elroy.cs.ucsb.edu" />
 	<property name="computer2" value="kenny.cs.ucsb.edu" />
 	<property name="computer3" value="dagwood.cs.ucsb.edu" />
 	<property name="computer4" value="calvin.cs.ucsb.edu" />
-	<property name="computer5" value="ella.cs.ucsb.edu" />
-	<property name="computer6" value="joplin.cs.ucsb.edu" />
+	 <!-- Not available:   ella   , joplin  -->
+	<property name="computer5" value="brain.cs.ucsb.edu" />
+	<property name="computer6" value="tygra.cs.ucsb.edu" />
 	<property name="computer7" value="cartman.cs.ucsb.edu" />
 	<property name="computer8" value="linus.cs.ucsb.edu" />
 	
@@ -71,7 +72,7 @@
   	</java>
   </target>  
 
-	<target name = "4worker" depends="dist" description = "Start Space and 4 Workers">
+	<target name = "8workers" depends="dist" description = "Start 8 Workers">
 		
 		<input message="enter username:" addproperty="username">
 		    <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
@@ -84,6 +85,10 @@
 		
 		<parallel>
 		  	  <!-- <sshexec host="${host}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant space"/> --> 
+			<sshexec host="${computer1}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant worker"/>
+			<sshexec host="${computer2}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant worker"/>
+			<sshexec host="${computer3}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant worker"/>
+			<sshexec host="${computer4}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant worker"/>
 			<sshexec host="${computer1}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant worker"/>
 			<sshexec host="${computer2}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant worker"/>
 			<sshexec host="${computer3}" username="${username}" password="${pw}" trust="true" command="cd ${projectpath}; ant worker"/>

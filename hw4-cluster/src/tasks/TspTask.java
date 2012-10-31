@@ -124,7 +124,7 @@ public class TspTask implements Serializable{
 					}
 			    
 					if (numComposeArguments == 0){
-						System.out.println("MISTENKT");
+						//System.out.println("MISTENKT");
 						send_argument(new TspReturn(null,inf));
 						
 					}else {
