@@ -1,0 +1,36 @@
+Readme for Homework2 in coures 290b , fall 2012
+by Oeyvind and Torgeir
+
+Creating a simple computer farm using a space and workers.
+The system handles many workers and one client. 
+
+
+########## Using ant and build.xml #############
+From hw2/ you can run any of these commands:
+
+
+To compile, type:
+	# ant compile
+
+To distribute the files to the web (http://www.cs.ucsb.edu/~orein/290b/hw2/), type:
+	# ant dist
+
+To start the space, type:
+	# ant space
+
+To start a worker, type:
+	# ant worker
+
+To start 4 worker at CSIL using SSH, type:
+	# ant 4worker
+
+To start the fibinacci client, type:
+	# ant fib
+
+To start the Tsp client, type:
+	# ant tsp
+
+
+Change the hostename in build.xml to the pc that will be hosting the space. (default is localhost).
+
+
