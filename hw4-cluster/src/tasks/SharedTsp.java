@@ -10,9 +10,12 @@ import api.Shared;
  */
 public class SharedTsp implements Shared, Serializable{
     static final long serialVersionUID = 227L; // Was missing 
-
-	private double tspShared;
-
+    private double tspShared;
+	
+    /** constructs the shared object, that is the path length
+     * 
+     * @param input is the inital value of the shared object, that is the initial best path length or cost
+     */
 	public SharedTsp(double input){
 		tspShared = input;
 	}
@@ -20,11 +23,15 @@ public class SharedTsp implements Shared, Serializable{
 	public SharedTsp(){
 		
 	}
-	
+	/**Returns the shared object from the space, that is the newst one
+	 * 
+	 */
 	public Object getShared(){
 		return (double)tspShared;
 	}
-
+	/**Detects if the path found is shorter than the shortest path found.
+	 * 
+	 */
 	public boolean isNewerThan(Shared input) {
 		if ( (Double) input.getShared() <= this.tspShared){
 			return false;
