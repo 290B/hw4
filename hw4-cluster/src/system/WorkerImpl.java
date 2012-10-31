@@ -62,6 +62,7 @@ public class WorkerImpl implements Worker, Serializable {
 			} catch(CloneNotSupportedException e){
 				System.out.println("Could not clone...");
 			}
+			System.out.println("Executing task...");
 			task.execute();
 			return new WorkerResult(t.spawn, t.spawn_next, t.spawn_nextJoin , t.send_argument);
 	}

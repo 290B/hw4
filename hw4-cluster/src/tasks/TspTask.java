@@ -47,6 +47,8 @@ public class TspTask implements Serializable{
 	    public double sumPathLength;
 	    public ArrayList<Integer> allTowns;
 	    public int levelToSplitAt;
+	    public double currentShortestPathLength = 1000000;
+	    public ArrayList<Integer> currentShortestPath = new ArrayList<Integer>();
 	    
 
 		/**
@@ -76,11 +78,11 @@ public class TspTask implements Serializable{
 		    allTowns = in.getAllTowns();
 		    levelToSplitAt = in.getLevelToSplitAt() ;    
 		  		
-		    /*
-		    if (path.size() == 1){
+		    
+		  if (path.size() == 1){
 				setShared(findInitialShortPath());
 				
-			}*/
+			}
 		   
 		    if (path.size() < levelToSplitAt){ //The tree is still too big to be computed localy, try to split
 		    	
@@ -107,7 +109,7 @@ public class TspTask implements Serializable{
 							
 							//if (newSumPath < currentBestValues.getSumPathLength()){
 							
-							if (newSumPath < (Double) sharedTsp.getShared()){ //TODO HERE
+							if (newSumPath + distances[0][newPath.get(newPath.size()-1)] <= (Double) sharedTsp.getShared()){ //TODO HERE
 							
 								//currentBestValues.settSumPathLength(newSumPath);
 								currentBestValues.setPath(newPath);
@@ -122,7 +124,7 @@ public class TspTask implements Serializable{
 					}
 			    
 					if (numComposeArguments == 0){
-						//System.out.println("MISTENKT");
+						System.out.println("MISTENKT");
 						send_argument(new TspReturn(null,inf));
 						
 					}else {
@@ -148,12 +150,17 @@ public class TspTask implements Serializable{
 		 */
 		public TspReturn localTsp(TspInputArg inn){
 			
+			sharedTsp = (SharedTsp)getShared();
+			if ((Double) sharedTsp.getShared() < currentShortestPathLength){
+				currentShortestPathLength = (Double) sharedTsp.getShared();
+			}
 		    ArrayList<Integer> path = inn.getPath();
 		    double [][] distances = inn.getDistances();
 		    double sumPathLength = inn.getSumPathLength();
 		    ArrayList<Integer> allTowns = inn.getAllTowns();
 			
-			if (path.size() < distances.length){ // The path is not at maximum length
+		
+			if (path.size() < distances.length){
 				
 				//for every child on path, that is every town except those visited on the path so far				
 				for (Integer town : allTowns){
@@ -164,27 +171,30 @@ public class TspTask implements Serializable{
 
 						double newSumPath = sumPathLength+(distances[path.get(path.size()-1)][newPath.get(newPath.size()-1)]);  //distance between the next town to visit and the previous one
 						//System.out.println("newPath" +newPath+" with length " + newSumPath);	
-						
-						//if (newSumPath < currentBestValues.getSumPathLength()){ //TODO is this right+???
-						if (newSumPath < (Double) sharedTsp.getShared()){							
-							//currentBestValues.settSumPathLength(newSumPath);
-							//currentBestValues.setPath(newPath);	
+						//TspExplorer localTask = new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
+						if (newSumPath + distances[0][newPath.get(newPath.size()-1)] < currentShortestPathLength){
 							localTsp(new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
-
 						}
+						
+						//localTask.execute();
+						
+
+						//return new TspReturn(currentShortestPath, currentShortestPathLength);
 					}
 				}				
 			}
-			else{ // the entire path is explored, return results and update shared variable
-			
-				sumPathLength += (distances[path.get(path.size()-1)][0]); //adding the length back to town -				
-				if (sumPathLength < (Double) sharedTsp.getShared()){
-					//currentBestValues.setPath(path);
+			else if (path.size() == distances.length){
+				sumPathLength += (distances[path.get(path.size()-1)][0]); //adding the length back to town -
+				
+				if (sumPathLength <= currentShortestPathLength){
+					currentShortestPathLength = sumPathLength;
+					ArrayList<Integer> tempPath = new ArrayList<Integer>();
+					tempPath.addAll(path);
+					currentShortestPath = tempPath;
 					setShared(new SharedTsp(sumPathLength));
 				}
-				return new TspReturn(path, sumPathLength);
 			}			
-			return new TspReturn(null, inf);
+			return new TspReturn(currentShortestPath, currentShortestPathLength);
 		}
 		
 		public Shared findInitialShortPath (){

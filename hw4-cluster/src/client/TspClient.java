@@ -26,7 +26,7 @@ public class TspClient {
 
 	private static final int N_PIXELS = 512;
 	
-	private static final int whichLevelToSplitAt = 0;
+	private static final int whichLevelToSplitAt = 20;
 	
 	private static double[][] towns =
 		{
@@ -36,9 +36,9 @@ public class TspClient {
 		{ 1, 8 },
 		{ 2, 2 },
 		{ 7, 2 },
-		//{ 7, 7 },
-		//{ 2, 7 },
-		//{ 3, 3 },
+		{ 7, 7 },
+		{ 2, 7 },
+		{ 3, 3 },
 		//{ 6, 3 },
 		//{ 6, 6 },
 		//{ 3, 6 },
@@ -74,7 +74,7 @@ public class TspClient {
     			total += (stop-start);
     		}
     		System.out.println("Average time: " + total/tries);
-    		       	
+    		/*       	
 
             JLabel euclideanTspLabel = displayEuclideanTspTaskReturnValue( towns, tour );
             JFrame frame = new JFrame( "Result Visualizations" );
@@ -84,6 +84,7 @@ public class TspClient {
             container.add( new JScrollPane( euclideanTspLabel ), BorderLayout.EAST );
             frame.pack();
             frame.setVisible( true );
+            */
             try{
             	space.exit();
             }
