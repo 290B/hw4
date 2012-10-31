@@ -25,7 +25,7 @@ import tasks.SharedTsp;
  */
 public class TspTask implements Serializable{
 	private static final long serialVersionUID = 227L;		
-	private static final double inf = 10000000; 
+	private static final double inf = 10000; 
 	
 	public SharedTsp sharedTsp;
 	public TspReturn currentBestValues = new TspReturn(new ArrayList<Integer>() , inf);
@@ -62,7 +62,9 @@ public class TspTask implements Serializable{
 
 			sharedTsp = (SharedTsp)getShared();
 			
-			currentBestValues.settSumPathLength((Double) sharedTsp.getShared());
+			//System.out.println("shared is " + sharedTsp.getShared());
+			
+			//currentBestValues.settSumPathLength((Double) sharedTsp.getShared());
 
 			TspInputArg in = (TspInputArg)args[0];
 
@@ -74,10 +76,11 @@ public class TspTask implements Serializable{
 		    allTowns = in.getAllTowns();
 		    levelToSplitAt = in.getLevelToSplitAt() ;    
 		  		
-		    
+		    /*
 		    if (path.size() == 1){
 				setShared(findInitialShortPath());
-			}
+				
+			}*/
 		   
 		    if (path.size() < levelToSplitAt){ //The tree is still too big to be computed localy, try to split
 		    	
@@ -104,19 +107,22 @@ public class TspTask implements Serializable{
 							
 							//if (newSumPath < currentBestValues.getSumPathLength()){
 							
-							if (newSumPath < (Double) sharedTsp.getShared()){
+							if (newSumPath < (Double) sharedTsp.getShared()){ //TODO HERE
 							
-								currentBestValues.settSumPathLength(newSumPath);
+								//currentBestValues.settSumPathLength(newSumPath);
 								currentBestValues.setPath(newPath);
 								
 								spawn(new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt)));
+								//TODO check if dynamic matters
 								numComposeArguments++;
 							}
+							//spawn(new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt)));
+							//numComposeArguments++;
 						}
 					}
 			    
 					if (numComposeArguments == 0){
-
+						//System.out.println("MISTENKT");
 						send_argument(new TspReturn(null,inf));
 						
 					}else {
@@ -161,12 +167,9 @@ public class TspTask implements Serializable{
 						
 						//if (newSumPath < currentBestValues.getSumPathLength()){ //TODO is this right+???
 						if (newSumPath < (Double) sharedTsp.getShared()){							
-							currentBestValues.settSumPathLength(newSumPath);
-							currentBestValues.setPath(newPath);			
-							TspExplorer localTask = new TspExplorer((Object)new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
-							//System.out.println("before executing local");
-
-							localTask.execute();
+							//currentBestValues.settSumPathLength(newSumPath);
+							//currentBestValues.setPath(newPath);	
+							localTsp(new TspInputArg(newPath, distances, newSumPath, allTowns ,levelToSplitAt));
 
 						}
 					}
@@ -174,19 +177,14 @@ public class TspTask implements Serializable{
 			}
 			else{ // the entire path is explored, return results and update shared variable
 			
-				sumPathLength += (distances[path.get(path.size()-1)][0]); //adding the length back to town -
-				
+				sumPathLength += (distances[path.get(path.size()-1)][0]); //adding the length back to town -				
 				if (sumPathLength < (Double) sharedTsp.getShared()){
-				
-					System.out.println("sumpathlength " + sumPathLength);
-					System.out.println("current best cal " + (Double) sharedTsp.getShared());
-				
-					currentBestValues.settSumPathLength(sumPathLength);
-					currentBestValues.setPath(path);
+					//currentBestValues.setPath(path);
 					setShared(new SharedTsp(sumPathLength));
 				}
+				return new TspReturn(path, sumPathLength);
 			}			
-			return new TspReturn(currentBestValues.getPath(), currentBestValues.getSumPathLength());
+			return new TspReturn(null, inf);
 		}
 		
 		public Shared findInitialShortPath (){
@@ -213,7 +211,18 @@ public class TspTask implements Serializable{
 				distanceToClosestTown = inf;
 			}
 			
-			totalDistance += distances[closestTown][newPath.get(0)]; // add length back to root town
+			totalDistance += distances[newPath.get(newPath.size()-1)][newPath.get(0)]; // add length back to root town
+			//System.out.println("distances " + totalDistance);
+			newPath.add(0);
+			//System.out.println(newPath);
+			
+			System.out.println("initial distance: "+totalDistance);
+			
+			//currentBestValues.settSumPathLength(totalDistance);
+			//currentBestValues.setPath(newPath);
+			
+			
+			
 			return new SharedTsp(totalDistance);
 		}
 	}
@@ -252,6 +261,9 @@ public class TspTask implements Serializable{
 					currentShortestPath = inputVal.getPath();
 				}
 			}
+			
+			//System.out.println("short path  " + currentShortestPath);
+			//System.out.println(" short path len " + currentShortestPathLength);
 			
 			TspReturn ret = new TspReturn(currentShortestPath,currentShortestPathLength);
 			send_argument(ret);
