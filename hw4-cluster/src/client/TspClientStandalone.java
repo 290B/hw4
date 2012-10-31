@@ -29,20 +29,23 @@ public class TspClientStandalone {
 	
 	private static double[][] towns =
 		{
-			{ 1, 1 },
-			{ 8, 1 },
-			{ 8, 8 },
-			{ 1, 8 },
-			{ 2, 2 },
-			{ 7, 2 },
-			{ 7, 7 },
-			{ 2, 7 },
-			{ 3, 3 },
-			{ 6, 3 },
-			{ 6, 6 },
-			{ 3, 6 },
+		{ 1, 1 },
+		{ 8, 1 },
+		{ 8, 8 },
+		{ 1, 8 },
+		{ 2, 2 },
+		{ 7, 2 },
+		{ 7, 7 },
+		{ 2, 7 },
+		{ 3, 3 },
+		{ 6, 3 },
+		{ 6, 6 },
+		{ 3, 6 },
+		{ 4, 4 },
+		{ 5, 4 },
+		{ 5, 5 },
+		{ 4, 5 }
 		};
-	
 	
     public static void main(String args[]) {
     	
@@ -63,9 +66,8 @@ public class TspClientStandalone {
 			space.main(null);
 			
 			WorkerImpl worker = new WorkerImpl();
-			String[] arg = new String[2];
+			String[] arg = new String[1];
 			arg[0]="localhost";
-			arg[1]= "1098";
 			worker.main(arg);
 
     		System.out.println("Starting TSP job");
@@ -81,7 +83,8 @@ public class TspClientStandalone {
     		System.out.println("Average time: " + total/tries);
     		       	
 
-            JLabel euclideanTspLabel = displayEuclideanTspTaskReturnValue( towns, tour );
+            /*
+    		JLabel euclideanTspLabel = displayEuclideanTspTaskReturnValue( towns, tour );
             JFrame frame = new JFrame( "Result Visualizations" );
             frame.setDefaultCloseOperation( JFrame.EXIT_ON_CLOSE );
             Container container = frame.getContentPane();
@@ -89,6 +92,7 @@ public class TspClientStandalone {
             container.add( new JScrollPane( euclideanTspLabel ), BorderLayout.EAST );
             frame.pack();
             frame.setVisible( true );
+            */
             try{
             	space.exit();
             }
